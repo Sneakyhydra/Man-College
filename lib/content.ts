@@ -102,6 +102,56 @@ export const galleryImages: { src: string; alt: string }[] = [
   },
 ];
 
+/** News & events / gallery page (mansociety.org gallery). */
+export const galleryFeaturedVideo = {
+  youtubeId: "X83AISvR2pI",
+  title:
+    "गुना। आखिर क्यों बढ़ती जा रही हैं आत्महत्याएं...? कैसे रोकें नशे की लत...?",
+} as const;
+
+export type GalleryAlbumCategory = "department" | "event" | "visit";
+
+export const galleryAlbums: {
+  coverSrc: string;
+  title?: string;
+  category: GalleryAlbumCategory;
+}[] = [
+  {
+    coverSrc:
+      "https://mann.plutonic.co.in/wp-content/uploads/2023/03/DSC_1863.jpg",
+    category: "department",
+  },
+  {
+    coverSrc:
+      "https://mann.plutonic.co.in/wp-content/uploads/2023/03/IMG_20191205_191640_7.jpg",
+    category: "event",
+  },
+  {
+    coverSrc:
+      "https://mann.plutonic.co.in/wp-content/uploads/2023/03/IMG-20150828-WA0018.jpg",
+    title: "World Summer Game 2015",
+    category: "event",
+  },
+  {
+    coverSrc:
+      "https://mann.plutonic.co.in/wp-content/uploads/2023/03/man-pepar.jpg",
+    title: "World Mental Health Day 2021",
+    category: "event",
+  },
+  {
+    coverSrc:
+      "https://mann.plutonic.co.in/wp-content/uploads/2023/03/IMG_20191010_151113_7.jpg",
+    title: "World Mental Health Day 2019 Annul Function",
+    category: "event",
+  },
+  {
+    coverSrc:
+      "https://mann.plutonic.co.in/wp-content/uploads/2023/03/DSC_8688.jpg",
+    title: "Visit",
+    category: "visit",
+  },
+];
+
 export const hospitalBlocks = [
   {
     title: "MAN Psychiatric Hospital",
