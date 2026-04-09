@@ -27,8 +27,9 @@ export default function HomePage() {
             Education and care at the intersection of mind and community.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-            {site.fullName} offers RCI-recognised programmes in clinical psychology and special
-            education, alongside on-campus psychiatric services that anchor hands-on training.
+            {site.fullName} offers RCI-recognised programmes in clinical
+            psychology and special education, alongside on-campus psychiatric
+            services that anchor hands-on training.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
@@ -47,7 +48,10 @@ export default function HomePage() {
           <dl className="mt-14 grid gap-6 sm:grid-cols-3">
             {[
               { k: "RCI-aligned", v: "Clinical & special education pathways" },
-              { k: "On-campus hospital", v: "OPD & in-patient training settings" },
+              {
+                k: "On-campus hospital",
+                v: "OPD & in-patient training settings",
+              },
               { k: "Affiliation", v: "Jiwaji University, Gwalior (M.Phil.)" },
             ].map((row) => (
               <div
@@ -55,14 +59,19 @@ export default function HomePage() {
                 className="rounded-2xl border border-border/80 bg-card/80 p-5 shadow-sm backdrop-blur-sm"
               >
                 <dt className="text-sm font-semibold text-accent">{row.k}</dt>
-                <dd className="mt-1 text-sm leading-snug text-muted">{row.v}</dd>
+                <dd className="mt-1 text-sm leading-snug text-muted">
+                  {row.v}
+                </dd>
               </div>
             ))}
           </dl>
         </div>
       </section>
 
-      <section className="border-b border-border bg-card py-14 sm:py-16" aria-labelledby="gallery-heading">
+      <section
+        className="border-b border-border bg-card py-14 sm:py-16"
+        aria-labelledby="gallery-heading"
+      >
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -73,7 +82,8 @@ export default function HomePage() {
                 Campus &amp; community
               </h2>
               <p className="mt-2 max-w-xl text-muted">
-                A glimpse of teaching spaces, clinical areas, and everyday life at the college.
+                A glimpse of teaching spaces, clinical areas, and everyday life
+                at the college.
               </p>
             </div>
             <Link
@@ -108,7 +118,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-16 sm:py-20" id="departments" aria-labelledby="dept-heading">
+      <section
+        className="py-16 sm:py-20"
+        id="departments"
+        aria-labelledby="dept-heading"
+      >
         <div className="mx-auto max-w-6xl px-4">
           <h2
             id="dept-heading"
@@ -117,8 +131,8 @@ export default function HomePage() {
             Departments
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-center text-muted">
-            Three pillars—clinical psychology, special education, and psychiatry—support both
-            students and the wider community.
+            Three pillars—clinical psychology, special education, and
+            psychiatry—support both students and the wider community.
           </p>
 
           <div className="mt-14 space-y-24">
@@ -163,8 +177,12 @@ export default function HomePage() {
                       </div>
                     </div>
                     <div className={i % 2 === 1 ? "lg:order-1" : ""}>
-                      <h4 className="font-serif-display text-2xl font-semibold">{block.title}</h4>
-                      <p className="mt-4 leading-relaxed text-muted">{block.text}</p>
+                      <h4 className="font-serif-display text-2xl font-semibold">
+                        {block.title}
+                      </h4>
+                      <p className="mt-4 leading-relaxed text-muted">
+                        {block.text}
+                      </p>
                       <Link
                         href="/hospital"
                         className="mt-6 inline-flex text-sm font-semibold text-accent hover:text-accent-hover"
@@ -186,8 +204,8 @@ export default function HomePage() {
             Ready to take the next step?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-stone-400">
-            Ask about eligibility, seat intake, or campus visits. Our team will point you to the
-            right programme office.
+            Ask about eligibility, seat intake, or campus visits. Our team will
+            point you to the right programme office.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
@@ -233,10 +251,15 @@ function ProgramRow({
         </div>
       </div>
       <div className={imageLeft ? "" : "lg:order-1"}>
-        <h4 className="font-serif-display text-2xl font-semibold">{course.shortTitle}</h4>
+        <h4 className="font-serif-display text-2xl font-semibold">
+          {course.shortTitle}
+        </h4>
         <p className="mt-2 text-sm font-medium text-accent">{course.summary}</p>
         {course.body.map((para) => (
-          <p key={para.slice(0, 40)} className="mt-4 leading-relaxed text-muted">
+          <p
+            key={para.slice(0, 40)}
+            className="mt-4 leading-relaxed text-muted"
+          >
             {para}
           </p>
         ))}

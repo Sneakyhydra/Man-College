@@ -24,14 +24,18 @@ export default function ContactPage() {
           >
             {site.phone}
           </a>
-          <h2 className="font-serif-display mt-10 text-xl font-semibold">Address</h2>
+          <h2 className="font-serif-display mt-10 text-xl font-semibold">
+            Address
+          </h2>
           <p className="mt-3 leading-relaxed text-muted">{site.address}</p>
         </section>
         <section className="rounded-2xl border border-border bg-card p-8 shadow-sm">
-          <h2 className="font-serif-display text-xl font-semibold">Write to us</h2>
+          <h2 className="font-serif-display text-xl font-semibold">
+            Write to us
+          </h2>
           <p className="mt-3 text-muted">
-            Wire this form to your CRM or email API when you are ready. For now, it is a styled
-            placeholder that does not submit anywhere.
+            Wire this form to your CRM or email API when you are ready. For now,
+            it is a styled placeholder that does not submit anywhere.
           </p>
           <ContactForm />
         </section>

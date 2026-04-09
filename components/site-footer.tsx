@@ -20,8 +20,8 @@ export function SiteFooter() {
               Children&apos;s mental health matters
             </h2>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-stone-400">
-              A short film on why early support and understanding make a lasting difference
-              for young people and families.
+              A short film on why early support and understanding make a lasting
+              difference for young people and families.
             </p>
             <div className="mt-4 aspect-video w-full max-w-md overflow-hidden rounded-xl border border-stone-700 bg-black shadow-xl">
               <iframe
@@ -73,7 +73,8 @@ export function SiteFooter() {
               Newsletter
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-stone-400">
-              Occasional updates on admissions, campus events, and public lectures.
+              Occasional updates on admissions, campus events, and public
+              lectures.
             </p>
             <form
               className="mt-4 flex flex-col gap-2 sm:flex-row"
@@ -110,7 +111,8 @@ export function SiteFooter() {
             © {year} {site.name}. All rights reserved.
           </p>
           <p className="max-w-md sm:text-right">
-            Academic details on this preview site are adapted from public information on{" "}
+            Academic details on this preview site are adapted from public
+            information on{" "}
             <a
               href={site.legacySite}
               className="text-stone-400 underline hover:text-white"

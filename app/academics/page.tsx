@@ -34,8 +34,12 @@ export default function AcademicsPage() {
               />
             </div>
             <div className="flex flex-col justify-center p-8 lg:col-span-3">
-              <h2 className="font-serif-display text-2xl font-semibold">{c.title}</h2>
-              <p className="mt-2 text-sm font-medium text-accent">{c.summary}</p>
+              <h2 className="font-serif-display text-2xl font-semibold">
+                {c.title}
+              </h2>
+              <p className="mt-2 text-sm font-medium text-accent">
+                {c.summary}
+              </p>
               <p className="mt-4 line-clamp-3 text-muted">{c.body[0]}</p>
               <Link
                 href={`/academics/${c.slug}`}

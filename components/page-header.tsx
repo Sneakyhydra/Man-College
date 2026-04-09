@@ -12,7 +12,9 @@ export function PageHeader({
           {title}
         </h1>
         {subtitle ? (
-          <p className="mt-3 max-w-2xl text-lg leading-relaxed text-muted">{subtitle}</p>
+          <p className="mt-3 max-w-2xl text-lg leading-relaxed text-muted">
+            {subtitle}
+          </p>
         ) : null}
       </div>
     </header>

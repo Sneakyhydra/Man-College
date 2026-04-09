@@ -5,7 +5,8 @@ import { galleryImages } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "News & events",
-  description: "Photo gallery from MAN College campus, teaching, and community programmes.",
+  description:
+    "Photo gallery from MAN College campus, teaching, and community programmes.",
 };
 
 export default function GalleryPage() {
@@ -18,7 +19,10 @@ export default function GalleryPage() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {galleryImages.map((img) => (
-            <li key={img.src} className="overflow-hidden rounded-2xl border border-border shadow-md">
+            <li
+              key={img.src}
+              className="overflow-hidden rounded-2xl border border-border shadow-md"
+            >
               <Image
                 src={img.src}
                 alt={img.alt}

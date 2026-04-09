@@ -12,9 +12,19 @@ const nav = [
     label: "Academics",
     children: [
       { href: "/academics", label: "All programmes" },
-      { href: "/academics/mphil-clinical-psychology", label: "M.Phil. Clinical Psychology" },
-      { href: "/academics/diploma-special-education", label: "D.Ed. Special Education" },
-      { href: "/academics/bed-special-education", label: "B.Ed. Special Education" },
+      { href: "/academics/departments", label: "Departments" },
+      {
+        href: "/academics/mphil-clinical-psychology",
+        label: "M.Phil. Clinical Psychology",
+      },
+      {
+        href: "/academics/diploma-special-education",
+        label: "D.Ed. Special Education",
+      },
+      {
+        href: "/academics/bed-special-education",
+        label: "B.Ed. Special Education",
+      },
     ],
   },
   { href: "/hospital", label: "Hospital" },
@@ -24,7 +34,9 @@ const nav = [
 ] as const;
 
 function cnPath(active: boolean) {
-  return active ? "text-accent font-medium" : "text-foreground/80 hover:text-accent";
+  return active
+    ? "text-accent font-medium"
+    : "text-foreground/80 hover:text-accent";
 }
 
 export function SiteHeader() {
@@ -44,9 +56,15 @@ export function SiteHeader() {
               <PhoneIcon className="size-3.5 shrink-0 opacity-80" aria-hidden />
               {site.phone}
             </a>
-            <span className="hidden h-3 w-px bg-stone-600 sm:block" aria-hidden />
+            <span
+              className="hidden h-3 w-px bg-stone-600 sm:block"
+              aria-hidden
+            />
             <span className="inline-flex items-start gap-1.5 text-stone-300">
-              <MapIcon className="mt-0.5 size-3.5 shrink-0 opacity-80" aria-hidden />
+              <MapIcon
+                className="mt-0.5 size-3.5 shrink-0 opacity-80"
+                aria-hidden
+              />
               <span className="leading-snug">{site.address}</span>
             </span>
           </div>
@@ -58,7 +76,11 @@ export function SiteHeader() {
       </div>
 
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <Link href="/" className="flex shrink-0 items-center gap-2" onClick={() => setOpen(false)}>
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-2"
+          onClick={() => setOpen(false)}
+        >
           <Image
             src="https://mansociety.org/wp-content/uploads/2023/07/Asset-31@2x.png"
             alt={site.name}
@@ -138,7 +160,11 @@ export function SiteHeader() {
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((o) => !o)}
         >
-          {open ? <CloseIcon className="size-6" /> : <MenuIcon className="size-6" />}
+          {open ? (
+            <CloseIcon className="size-6" />
+          ) : (
+            <MenuIcon className="size-6" />
+          )}
         </button>
       </div>
 
@@ -149,10 +175,16 @@ export function SiteHeader() {
           role="dialog"
           aria-modal="true"
         >
-          <nav className="mx-auto max-w-6xl space-y-1 px-4 py-4" aria-label="Mobile">
+          <nav
+            className="mx-auto max-w-6xl space-y-1 px-4 py-4"
+            aria-label="Mobile"
+          >
             {nav.map((item) =>
               "children" in item ? (
-                <div key={item.label} className="border-b border-border/80 py-2">
+                <div
+                  key={item.label}
+                  className="border-b border-border/80 py-2"
+                >
                   <button
                     type="button"
                     className="flex w-full items-center justify-between py-2 text-left font-medium"
@@ -252,7 +284,13 @@ function SocialLinks() {
 
 function PhoneIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      {...props}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -264,8 +302,18 @@ function PhoneIcon(props: SVGProps<SVGSVGElement>) {
 
 function MapIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      {...props}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+      />
       <circle cx="12" cy="10" r="3" />
     </svg>
   );
@@ -273,7 +321,13 @@ function MapIcon(props: SVGProps<SVGSVGElement>) {
 
 function ChevronDown(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      {...props}
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
     </svg>
   );
@@ -281,7 +335,13 @@ function ChevronDown(props: SVGProps<SVGSVGElement>) {
 
 function MenuIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      {...props}
+    >
       <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   );
@@ -289,7 +349,13 @@ function MenuIcon(props: SVGProps<SVGSVGElement>) {
 
 function CloseIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      {...props}
+    >
       <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
     </svg>
   );

@@ -30,7 +30,10 @@ export function ContactForm() {
         />
       </div>
       <div>
-        <label htmlFor="message" className="text-sm font-medium text-foreground">
+        <label
+          htmlFor="message"
+          className="text-sm font-medium text-foreground"
+        >
           Message
         </label>
         <textarea

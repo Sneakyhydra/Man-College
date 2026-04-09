@@ -2,49 +2,82 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
-import { hospitalBlocks, site } from "@/lib/content";
+import { hospitalPsychiatryPage, site } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Hospital",
   description:
-    "MAN Psychiatric Hospital and OPD: in-patient beds and daily outpatient services supporting clinical training.",
+    "Department of Psychiatry at MAN: IPD, OPD, specialty clinics, and registration with the State Mental Health Authority, M.P.",
 };
 
 export default function HospitalPage() {
   return (
     <>
       <PageHeader
-        title="MAN Psychiatric Hospital"
-        subtitle="On-campus psychiatric services support community care and provide the supervised clinical exposure required for professional psychology training."
+        title="Hospital"
+        subtitle="Department of Psychiatry—specialty clinics, in-patient care, and daily OPD on campus."
       />
-      <div className="mx-auto max-w-6xl space-y-16 px-4 py-12 sm:py-16">
-        {hospitalBlocks.map((block, i) => (
-          <article
-            key={block.title}
-            className={`grid gap-8 lg:grid-cols-2 lg:items-center ${i % 2 === 1 ? "lg:[&>div:first-child]:order-2" : ""}`}
-          >
-            <div className={i % 2 === 1 ? "lg:order-2" : ""}>
-              <div className="overflow-hidden rounded-2xl border border-border shadow-lg">
+      <div className="mx-auto max-w-6xl space-y-14 px-4 py-12 sm:space-y-16 sm:py-16">
+        <section>
+          <h2 className="font-serif-display text-2xl font-semibold uppercase tracking-wide sm:text-3xl">
+            Department of Psychiatry
+          </h2>
+          <p className="mt-4 max-w-4xl leading-relaxed text-muted">
+            {hospitalPsychiatryPage.intro}
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-serif-display text-xl font-semibold sm:text-2xl">
+            IPD
+          </h2>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {hospitalPsychiatryPage.ipdImages.map((img) => (
+              <div
+                key={img.src}
+                className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+              >
                 <Image
-                  src={block.image}
-                  alt={block.imageAlt}
+                  src={img.src}
+                  alt={img.alt}
                   width={1024}
-                  height={683}
+                  height={684}
+                  className="aspect-[3/2] h-auto w-full object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="font-serif-display text-xl font-semibold sm:text-2xl">
+            OPD
+          </h2>
+          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            {hospitalPsychiatryPage.opdImages.map((img) => (
+              <div
+                key={img.src}
+                className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm lg:max-w-xl"
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  width={1024}
+                  height={684}
                   className="aspect-[3/2] h-auto w-full object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
-            </div>
-            <div className={i % 2 === 1 ? "lg:order-1" : ""}>
-              <h2 className="font-serif-display text-2xl font-semibold">{block.title}</h2>
-              <p className="mt-4 leading-relaxed text-muted">{block.text}</p>
-            </div>
-          </article>
-        ))}
+            ))}
+          </div>
+        </section>
+
         <section className="rounded-2xl border border-border bg-card p-8 text-center shadow-sm">
           <p className="text-muted">
-            Patient services and visitor policies are managed by the hospital administration. For
-            academic placements, speak with your programme coordinator.
+            Patient services and visitor policies are managed by the hospital
+            administration. For academic placements, speak with your programme
+            coordinator.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             <Link

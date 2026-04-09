@@ -32,7 +32,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}>
+    <html
+      lang="en"
+      className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}
+    >
       <body className="min-h-full flex flex-col antialiased">
         <SiteHeader />
         <main className="flex-1">{children}</main>

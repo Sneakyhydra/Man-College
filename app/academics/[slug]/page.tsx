@@ -50,8 +50,9 @@ export default async function CoursePage({ params }: Props) {
             ))}
             <div className="rounded-xl border border-accent-subtle bg-accent-subtle/40 p-6">
               <p className="text-sm font-medium text-foreground">
-                Before you apply, confirm the latest prospectus, fees, and seat matrix from the
-                college office and official RCI / university notifications.
+                Before you apply, confirm the latest prospectus, fees, and seat
+                matrix from the college office and official RCI / university
+                notifications.
               </p>
               <Link
                 href="/contact"
@@ -63,7 +64,10 @@ export default async function CoursePage({ params }: Props) {
           </div>
         </div>
         <p className="mt-12 text-center text-sm text-muted">
-          <Link href="/academics" className="font-medium text-accent hover:text-accent-hover">
+          <Link
+            href="/academics"
+            className="font-medium text-accent hover:text-accent-hover"
+          >
             ← All programmes
           </Link>
         </p>

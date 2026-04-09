@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
         pathname: "/wp-content/**",
       },
     ],
+    // Cache optimized images longer (default 60s) so repeat visits hit the cache.
+    minimumCacheTTL: 60 * 60 * 24 * 30,
   },
 };
 

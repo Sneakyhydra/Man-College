@@ -2,7 +2,8 @@ export const site = {
   name: "MAN College",
   fullName:
     "MAN College of Special Education and Psychological Studies, Guna, M.P.",
-  tagline: "Clinical training, special education, and compassionate mental health care.",
+  tagline:
+    "Clinical training, special education, and compassionate mental health care.",
   phone: "+91 9179566299",
   phoneTel: "tel:+919179566299",
   address:
@@ -115,6 +116,88 @@ export const hospitalBlocks = [
     imageAlt: "Out-patient department",
   },
 ] as const;
+
+/** Full hospital page copy and galleries (mansociety.org hospital / psychiatry page). */
+export const hospitalPsychiatryPage = {
+  intro:
+    "The department of psychiatry was established in the year 2009. The department has three Specialty Clinics (a) Psycho Therapy Centre (Child/Adolescence / Adult); (b) Psychological Assessment (c) De- Addiction Centre. Department of Psychiatry has a hospital, with In-ward patient (IPD) facilities and outpatient department (OPD) started in 2018. The department is run by a dedicated team of doctors qualified as M.D. Psychiatrist, Physician, Clinical Psychologist, Child Psychiatrist, Neurologist and Nursing Staff. Hospital is registered with State Mental Health Authority, M.P., and Office of the Chief Medical and Health Officer.",
+  ipdImages: [
+    {
+      src: "https://mansociety.org/wp-content/uploads/2023/07/HOSPITAL-MAN-DE-ADDICTION-CENTRE-1-1024x684.jpg",
+      alt: "MAN Hospital de-addiction centre",
+    },
+    {
+      src: "https://mansociety.org/wp-content/uploads/2023/07/hospital-IPD-2-1024x684.jpg",
+      alt: "Hospital in-patient ward",
+    },
+    {
+      src: "https://mansociety.org/wp-content/uploads/2023/07/IPD-1-1024x683.jpg",
+      alt: "In-patient department facilities",
+    },
+  ],
+  opdImages: [
+    {
+      src: "https://mansociety.org/wp-content/uploads/2023/07/PSYCHIATRIC-OPD-1-1024x684.jpg",
+      alt: "Psychiatric out-patient department",
+    },
+  ],
+} as const;
+
+/** Library page galleries (mansociety.org library page). */
+export const libraryPage = {
+  clinicalPsychology: {
+    images: [
+      {
+        src: "https://mansociety.org/wp-content/uploads/2023/07/LIBRARY--1024x684.jpg",
+        alt: "Clinical psychology library",
+        width: 1024,
+        height: 684,
+      },
+      {
+        src: "https://mansociety.org/wp-content/uploads/2023/07/E-LIBRARY-684x1024.jpg",
+        alt: "E-library access",
+        width: 684,
+        height: 1024,
+      },
+      {
+        src: "https://mansociety.org/wp-content/uploads/2023/07/E-LIBRARY-1-1024x684.jpg",
+        alt: "E-library facilities",
+        width: 1024,
+        height: 684,
+      },
+    ],
+    readingRoom: [
+      {
+        src: "https://mansociety.org/wp-content/uploads/2023/07/READING-ROOM-1-1024x684.jpg",
+        alt: "Library reading room",
+        width: 1024,
+        height: 684,
+      },
+    ],
+  },
+  specialEducation: {
+    images: [
+      {
+        src: "https://mansociety.org/wp-content/uploads/2023/07/001-4-1024x683.jpg",
+        alt: "Special education library",
+        width: 1024,
+        height: 683,
+      },
+      {
+        src: "https://mansociety.org/wp-content/uploads/2023/07/002-1024x683.jpg",
+        alt: "Special education library collection",
+        width: 1024,
+        height: 683,
+      },
+      {
+        src: "https://mansociety.org/wp-content/uploads/2023/07/B.Ed-library-2-1024x683.jpg",
+        alt: "B.Ed. special education library",
+        width: 1024,
+        height: 683,
+      },
+    ],
+  },
+} as const;
 
 export const specialSchoolBlock = {
   title: "MAN Special School",
