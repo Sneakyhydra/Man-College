@@ -42,6 +42,7 @@ function cnPath(active: boolean) {
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [desktopAcademicsOpen, setDesktopAcademicsOpen] = useState(false);
   const [academicsOpen, setAcademicsOpen] = useState(false);
 
   return (
@@ -94,18 +95,28 @@ export function SiteHeader() {
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
           {nav.map((item) =>
             "children" in item ? (
-              <div key={item.label} className="relative group">
+              <div
+                key={item.label}
+                className="relative"
+                onMouseEnter={() => setDesktopAcademicsOpen(true)}
+                onMouseLeave={() => setDesktopAcademicsOpen(false)}
+              >
                 <button
                   type="button"
                   className="flex items-center gap-1 rounded-md px-3 py-2 text-sm text-foreground/80 transition hover:bg-stone-100 hover:text-accent"
-                  aria-expanded={undefined}
+                  aria-expanded={desktopAcademicsOpen}
                   aria-haspopup="true"
+                  onClick={() => setDesktopAcademicsOpen((v) => !v)}
                 >
                   {item.label}
                   <ChevronDown className="size-4 opacity-60" aria-hidden />
                 </button>
                 <ul
-                  className="invisible absolute left-0 top-full z-50 min-w-[16rem] translate-y-1 rounded-lg border border-border bg-card py-2 shadow-lg opacity-0 transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+                  className={`absolute left-0 top-full z-50 min-w-[16rem] rounded-lg border border-border bg-card py-2 shadow-lg transition ${
+                    desktopAcademicsOpen
+                      ? "visible translate-y-0 opacity-100"
+                      : "invisible translate-y-1 opacity-0"
+                  }`}
                   role="menu"
                 >
                   {item.children.map((c) => (
@@ -114,6 +125,7 @@ export function SiteHeader() {
                         href={c.href}
                         role="menuitem"
                         className="block px-4 py-2 text-sm text-foreground/85 hover:bg-accent-subtle/50 hover:text-accent"
+                        onClick={() => setDesktopAcademicsOpen(false)}
                       >
                         {c.label}
                       </Link>
@@ -136,6 +148,7 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={`rounded-md px-3 py-2 text-sm transition hover:bg-stone-100 ${cnPath(pathname === item.href || pathname.startsWith(`${item.href}/`))}`}
+                onClick={() => setDesktopAcademicsOpen(false)}
               >
                 {item.label}
               </Link>

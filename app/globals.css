@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 :root {
+  --skills-primary: 153, 0, 255;
+  --skills-secondary: 124, 1, 206;
   --background: #faf9f7;
   --foreground: #1c1917;
   --muted: #57534e;
   --card: #ffffff;
-  --accent: #0f766e;
-  --accent-hover: #0d9488;
-  --accent-subtle: #ccfbf1;
+  --accent: rgb(var(--skills-primary));
+  --accent-hover: rgb(var(--skills-secondary));
+  --accent-subtle: rgba(var(--skills-primary), 0.14);
   --border: #e7e5e4;
-  --ring: #0f766e;
+  --ring: rgb(var(--skills-primary));
 }
 
 @theme inline {
