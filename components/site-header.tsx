@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type SVGProps } from "react";
+import { PwaInstallButton } from "@/components/pwa-install-button";
 import { site } from "@/lib/content";
 
 const nav = [
@@ -49,7 +50,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-card/90 backdrop-blur-md">
       <div className="border-b border-border/60 bg-stone-900 text-stone-100">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-2 text-xs sm:flex-row sm:items-center sm:justify-between sm:text-sm">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2 text-xs sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <a
               href={site.phoneTel}
@@ -77,7 +78,7 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2"
@@ -104,7 +105,7 @@ export function SiteHeader() {
               >
                 <button
                   type="button"
-                  className="flex items-center gap-1 rounded-md px-3 py-2 text-sm text-foreground/80 transition hover:bg-stone-100 hover:text-accent"
+                  className="flex items-center gap-1 rounded-md px-3 py-2 text-sm whitespace-nowrap text-foreground/80 transition hover:bg-stone-100 hover:text-accent"
                   aria-expanded={desktopAcademicsOpen}
                   aria-haspopup="true"
                   onClick={() => setDesktopAcademicsOpen((v) => !v)}
@@ -140,7 +141,7 @@ export function SiteHeader() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-md px-3 py-2 text-sm text-foreground/80 transition hover:bg-stone-100 hover:text-accent"
+                className="rounded-md px-3 py-2 text-sm whitespace-nowrap text-foreground/80 transition hover:bg-stone-100 hover:text-accent"
               >
                 {item.label}
               </a>
@@ -148,7 +149,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-md px-3 py-2 text-sm transition hover:bg-stone-100 ${cnPath(pathname === item.href || pathname.startsWith(`${item.href}/`))}`}
+                className={`rounded-md px-3 py-2 text-sm whitespace-nowrap transition hover:bg-stone-100 ${cnPath(pathname === item.href || pathname.startsWith(`${item.href}/`))}`}
                 onClick={() => setDesktopAcademicsOpen(false)}
               >
                 {item.label}
@@ -157,10 +158,11 @@ export function SiteHeader() {
           )}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-2 lg:flex">
+          <PwaInstallButton />
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center rounded-full bg-accent px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-accent-hover"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-accent px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-accent-hover"
           >
             Contact us
           </Link>
@@ -255,6 +257,7 @@ export function SiteHeader() {
             >
               Contact us
             </Link>
+            <PwaInstallButton className="mt-3" />
           </nav>
         </div>
       ) : null}
