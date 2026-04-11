@@ -1,5 +1,13 @@
-const CACHE_NAME = "man-college-v1";
-const APP_SHELL = ["/", "/queue", "/manifest.webmanifest", "/favicon.png"];
+const CACHE_NAME = "man-college-v2";
+const APP_SHELL = [
+  "/",
+  "/queue",
+  "/manifest.webmanifest",
+  "/favicon.png",
+  "/pwa-192.png",
+  "/pwa-512.png",
+  "/apple-touch-icon.png",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

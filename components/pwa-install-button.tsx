@@ -18,6 +18,9 @@ export function PwaInstallButton({ className = "" }: { className?: string }) {
       ("standalone" in window.navigator &&
         (window.navigator as Navigator & { standalone?: boolean })
           .standalone === true));
+  const isSafariBrowser =
+    typeof window !== "undefined" &&
+    /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
 
   useEffect(() => {
     const onBeforeInstallPrompt = (event: Event) => {
@@ -66,8 +69,9 @@ export function PwaInstallButton({ className = "" }: { className?: string }) {
       </button>
       {showFallbackHelp ? (
         <p className="mt-1 max-w-xs text-xs text-muted">
-          Install prompt unavailable. In browser menu, use &quot;Install
-          app&quot; or &quot;Add to Home Screen&quot;.
+          {isSafariBrowser
+            ? "Safari does not trigger this prompt. Use Share or File menu and choose Add to Dock/Home Screen."
+            : "Install prompt unavailable right now. Use browser menu and choose Install app."}
         </p>
       ) : null}
     </div>
