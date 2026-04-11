@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { PwaRegister } from "@/components/pwa-register";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/lib/content";
@@ -24,11 +25,16 @@ export const metadata: Metadata = {
   },
   description: site.tagline,
   metadataBase: new URL("https://mansociety.org"),
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.png",
     apple: "/favicon.png",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#9900ff",
 };
 
 export default function RootLayout({
@@ -42,6 +48,7 @@ export default function RootLayout({
       className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}
     >
       <body className="min-h-full flex flex-col antialiased">
+        <PwaRegister />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

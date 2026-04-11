@@ -28,6 +28,7 @@ const nav = [
     ],
   },
   { href: "/hospital", label: "Hospital" },
+  { href: "/queue", label: "Patient queue" },
   { href: "/library", label: "Library" },
   { href: "/gallery", label: "News & events" },
   { href: site.cctvUrl, label: "CCTV view", external: true },

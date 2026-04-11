@@ -6,6 +6,7 @@ const footerLinks = [
   { href: "/gallery", label: "Gallery" },
   { href: "/contact", label: "Contact" },
   { href: "/academics", label: "Programmes" },
+  { href: "/queue", label: "Patient queue" },
 ];
 
 export function SiteFooter() {
