@@ -9,8 +9,8 @@ function requireEnv(name: string) {
 }
 
 export function createSupabaseServerClient() {
-  const url = requireEnv("NEXT_PUBLIC_SUPABASE_URL");
-  const anonKey = requireEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY");
+  const url = requireEnv("SUPABASE_URL");
+  const anonKey = requireEnv("SUPABASE_PUBLISHABLE_KEY");
 
   return createClient(url, anonKey, {
     auth: {
