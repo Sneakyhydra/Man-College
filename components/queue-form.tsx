@@ -17,8 +17,10 @@ type QueueSuccess = {
 };
 
 export function QueueForm() {
+  const [patientType, setPatientType] = useState<"new" | "existing" | null>(
+    null,
+  );
   const [patientId, setPatientId] = useState("");
-  const [isNewPatient, setIsNewPatient] = useState(false);
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [queueDate, setQueueDate] = useState("");
@@ -34,10 +36,19 @@ export function QueueForm() {
     };
   }, []);
 
+  const isNewPatient = patientType === "new";
+  const isExistingPatient = patientType === "existing";
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setSuccess(null);
+
+    if (!patientType) {
+      setError("Please select whether you are a new or existing patient.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -63,8 +74,8 @@ export function QueueForm() {
       }
 
       setSuccess(json);
+      setPatientType(null);
       setPatientId("");
-      setIsNewPatient(false);
       setName("");
       setMobile("");
       setQueueDate("");
@@ -77,98 +88,133 @@ export function QueueForm() {
 
   return (
     <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
-      <div>
-        <label
-          htmlFor="patient-id"
-          className="text-sm font-medium text-foreground"
-        >
-          Patient ID {isNewPatient ? "(optional)" : ""}
-        </label>
-        <input
-          id="patient-id"
-          name="patientId"
-          value={patientId}
-          onChange={(e) => setPatientId(e.target.value)}
-          placeholder="Example: MAN1234"
-          required={!isNewPatient}
-          className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-        />
-        <label className="mt-2 inline-flex items-center gap-2 text-xs text-muted">
-          <input
-            type="checkbox"
-            checked={isNewPatient}
-            onChange={(e) => setIsNewPatient(e.target.checked)}
-            className="size-4 rounded border-border"
-          />
-          This is a new patient (no system ID yet)
-        </label>
-      </div>
+      <fieldset className="rounded-lg border border-border bg-background p-4">
+        <legend className="px-1 text-sm font-medium text-foreground">
+          Are you a new patient?
+        </legend>
+        <div className="mt-2 flex flex-wrap gap-3">
+          <label className="inline-flex items-center gap-2 text-sm text-foreground">
+            <input
+              type="radio"
+              name="patientType"
+              value="existing"
+              checked={isExistingPatient}
+              onChange={() => setPatientType("existing")}
+              className="size-4 border-border"
+            />
+            No, I am an existing patient
+          </label>
+          <label className="inline-flex items-center gap-2 text-sm text-foreground">
+            <input
+              type="radio"
+              name="patientType"
+              value="new"
+              checked={isNewPatient}
+              onChange={() => {
+                setPatientType("new");
+                setPatientId("");
+              }}
+              className="size-4 border-border"
+            />
+            Yes, I am a new patient
+          </label>
+        </div>
+      </fieldset>
 
-      <div>
-        <label
-          htmlFor="queue-name"
-          className="text-sm font-medium text-foreground"
-        >
-          Patient name
-        </label>
-        <input
-          id="queue-name"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-        />
-      </div>
+      {patientType ? (
+        <>
+          {isExistingPatient ? (
+            <div>
+              <label
+                htmlFor="patient-id"
+                className="text-sm font-medium text-foreground"
+              >
+                Patient ID
+              </label>
+              <input
+                id="patient-id"
+                name="patientId"
+                value={patientId}
+                onChange={(e) => setPatientId(e.target.value)}
+                placeholder="Example: MAN1234"
+                required
+                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+            </div>
+          ) : null}
 
-      <div>
-        <label
-          htmlFor="queue-mobile"
-          className="text-sm font-medium text-foreground"
-        >
-          Mobile number
-        </label>
-        <input
-          id="queue-mobile"
-          name="mobile"
-          value={mobile}
-          onChange={(e) => setMobile(e.target.value)}
-          inputMode="tel"
-          required
-          className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-        />
-      </div>
+          <div>
+            <label
+              htmlFor="queue-name"
+              className="text-sm font-medium text-foreground"
+            >
+              Patient name
+            </label>
+            <input
+              id="queue-name"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            />
+          </div>
 
-      <div>
-        <label
-          htmlFor="queue-date"
-          className="text-sm font-medium text-foreground"
-        >
-          Queue date
-        </label>
-        <input
-          id="queue-date"
-          name="queueDate"
-          type="date"
-          value={queueDate}
-          onChange={(e) => setQueueDate(e.target.value)}
-          min={minDate}
-          max={maxDate}
-          required
-          className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-        />
-        <p className="mt-1 text-xs text-muted">
-          You can book from {minDate} to {maxDate} ({BOOKING_WINDOW_DAYS} days).
+          <div>
+            <label
+              htmlFor="queue-mobile"
+              className="text-sm font-medium text-foreground"
+            >
+              Mobile number
+            </label>
+            <input
+              id="queue-mobile"
+              name="mobile"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+              inputMode="tel"
+              required
+              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="queue-date"
+              className="text-sm font-medium text-foreground"
+            >
+              Queue date
+            </label>
+            <input
+              id="queue-date"
+              name="queueDate"
+              type="date"
+              value={queueDate}
+              onChange={(e) => setQueueDate(e.target.value)}
+              min={minDate}
+              max={maxDate}
+              required
+              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            />
+            <p className="mt-1 text-xs text-muted">
+              You can book from {minDate} to {maxDate} ({BOOKING_WINDOW_DAYS}{" "}
+              days).
+            </p>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {loading ? "Joining queue..." : "Join queue"}
+          </button>
+        </>
+      ) : (
+        <p className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted">
+          Select patient type to continue.
         </p>
-      </div>
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-70"
-      >
-        {loading ? "Joining queue..." : "Join queue"}
-      </button>
+      )}
 
       <p className="text-xs text-muted">
         Each day allows a maximum of {MAX_QUEUE_PER_DAY} patients.
