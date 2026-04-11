@@ -1,12 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import {
-  BOOKING_WINDOW_DAYS,
-  MAX_QUEUE_PER_DAY,
-  dateToIsoDay,
-  getDateWindowUtc,
-} from "@/lib/queue";
+import { useState } from "react";
+import { MAX_QUEUE_PER_DAY } from "@/lib/queue";
+import type { QueueMessages } from "@/lib/queue-i18n";
 
 type QueueSuccess = {
   queueDate: string;
@@ -16,25 +12,22 @@ type QueueSuccess = {
   alreadyQueued: boolean;
 };
 
-export function QueueForm() {
+export function QueueForm({
+  selectedDate,
+  messages,
+}: {
+  selectedDate: string | null;
+  messages: QueueMessages;
+}) {
   const [patientType, setPatientType] = useState<"new" | "existing" | null>(
     null,
   );
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
-  const [queueDate, setQueueDate] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<QueueSuccess | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const { minDate, maxDate } = useMemo(() => {
-    const { start, end } = getDateWindowUtc();
-    return {
-      minDate: dateToIsoDay(start),
-      maxDate: dateToIsoDay(end),
-    };
-  }, []);
 
   const isNewPatient = patientType === "new";
   const isExistingPatient = patientType === "existing";
@@ -45,31 +38,31 @@ export function QueueForm() {
     setSuccess(null);
 
     if (!patientType) {
-      setError("Please select whether you are a new or existing patient.");
+      setError(messages.formErrPatientType);
+      return;
+    }
+    if (!selectedDate) {
+      setError(messages.formErrNoDate);
       return;
     }
 
     setLoading(true);
-
     try {
       const response = await fetch("/api/queue", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           patientId,
           isNewPatient,
           name,
           mobile,
-          queueDate,
+          queueDate: selectedDate,
         }),
       });
 
       const json = (await response.json()) as { error: string } | QueueSuccess;
-
       if (!response.ok || "error" in json) {
-        setError("error" in json ? json.error : "Failed to join queue.");
+        setError("error" in json ? json.error : messages.formErrGeneric);
         return;
       }
 
@@ -78,9 +71,8 @@ export function QueueForm() {
       setPatientId("");
       setName("");
       setMobile("");
-      setQueueDate("");
     } catch {
-      setError("Network error. Please try again.");
+      setError(messages.formErrNetwork);
     } finally {
       setLoading(false);
     }
@@ -88,9 +80,26 @@ export function QueueForm() {
 
   return (
     <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+      <div>
+        <label
+          htmlFor="selected-visit-date"
+          className="text-sm font-medium text-foreground"
+        >
+          {messages.formVisitDate}
+        </label>
+        <input
+          id="selected-visit-date"
+          type="text"
+          readOnly
+          value={selectedDate ?? ""}
+          placeholder={messages.formVisitDatePlaceholder}
+          className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+        />
+      </div>
+
       <fieldset className="rounded-lg border border-border bg-background p-4">
         <legend className="px-1 text-sm font-medium text-foreground">
-          Are you a new patient?
+          {messages.formPatientTypeLegend}
         </legend>
         <div className="mt-2 flex flex-wrap gap-3">
           <label className="inline-flex items-center gap-2 text-sm text-foreground">
@@ -102,7 +111,7 @@ export function QueueForm() {
               onChange={() => setPatientType("existing")}
               className="size-4 border-border"
             />
-            No, I am an existing patient
+            {messages.formExistingPatient}
           </label>
           <label className="inline-flex items-center gap-2 text-sm text-foreground">
             <input
@@ -116,108 +125,76 @@ export function QueueForm() {
               }}
               className="size-4 border-border"
             />
-            Yes, I am a new patient
+            {messages.formNewPatient}
           </label>
         </div>
       </fieldset>
 
-      {patientType ? (
-        <>
-          {isExistingPatient ? (
-            <div>
-              <label
-                htmlFor="patient-id"
-                className="text-sm font-medium text-foreground"
-              >
-                Patient ID
-              </label>
-              <input
-                id="patient-id"
-                name="patientId"
-                value={patientId}
-                onChange={(e) => setPatientId(e.target.value)}
-                placeholder="Example: MAN1234"
-                required
-                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-              />
-            </div>
-          ) : null}
-
-          <div>
-            <label
-              htmlFor="queue-name"
-              className="text-sm font-medium text-foreground"
-            >
-              Patient name
-            </label>
-            <input
-              id="queue-name"
-              name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="queue-mobile"
-              className="text-sm font-medium text-foreground"
-            >
-              Mobile number
-            </label>
-            <input
-              id="queue-mobile"
-              name="mobile"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              inputMode="tel"
-              required
-              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="queue-date"
-              className="text-sm font-medium text-foreground"
-            >
-              Queue date
-            </label>
-            <input
-              id="queue-date"
-              name="queueDate"
-              type="date"
-              value={queueDate}
-              onChange={(e) => setQueueDate(e.target.value)}
-              min={minDate}
-              max={maxDate}
-              required
-              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-            />
-            <p className="mt-1 text-xs text-muted">
-              You can book from {minDate} to {maxDate} ({BOOKING_WINDOW_DAYS}{" "}
-              days).
-            </p>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-70"
+      {isExistingPatient ? (
+        <div>
+          <label
+            htmlFor="patient-id"
+            className="text-sm font-medium text-foreground"
           >
-            {loading ? "Joining queue..." : "Join queue"}
-          </button>
-        </>
-      ) : (
-        <p className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted">
-          Select patient type to continue.
-        </p>
-      )}
+            {messages.formPatientId}
+          </label>
+          <input
+            id="patient-id"
+            name="patientId"
+            value={patientId}
+            onChange={(e) => setPatientId(e.target.value)}
+            placeholder={messages.formPatientIdPlaceholder}
+            required
+            className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+          />
+        </div>
+      ) : null}
+
+      <div>
+        <label
+          htmlFor="queue-name"
+          className="text-sm font-medium text-foreground"
+        >
+          {messages.formPatientName}
+        </label>
+        <input
+          id="queue-name"
+          name="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="queue-mobile"
+          className="text-sm font-medium text-foreground"
+        >
+          {messages.formMobile}
+        </label>
+        <input
+          id="queue-mobile"
+          name="mobile"
+          value={mobile}
+          onChange={(e) => setMobile(e.target.value)}
+          inputMode="tel"
+          required
+          className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+        />
+      </div>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-70"
+      >
+        {loading ? messages.formJoining : messages.formJoinQueue}
+      </button>
 
       <p className="text-xs text-muted">
-        Each day allows a maximum of {MAX_QUEUE_PER_DAY} patients.
+        {messages.formMaxPerDay(MAX_QUEUE_PER_DAY)}
       </p>
 
       {error ? (
@@ -230,14 +207,20 @@ export function QueueForm() {
         <div className="rounded-lg border border-accent-subtle bg-accent-subtle/40 px-3 py-3 text-sm text-foreground">
           <p className="font-semibold">
             {success.alreadyQueued
-              ? "You have already entered the queue"
-              : "Queue joined successfully"}
+              ? messages.formSuccessAlready
+              : messages.formSuccessJoined}
           </p>
           <p className="mt-1 text-muted-strong">{success.message}</p>
-          <p className="mt-3 font-medium">Visit details</p>
-          <p className="mt-1">Visit date: {success.queueDate}</p>
-          <p>Queue number: {success.queueNumber}</p>
-          <p className="text-xs text-muted">Reference ID: {success.entryId}</p>
+          <p className="mt-3 font-medium">{messages.formVisitDetails}</p>
+          <p className="mt-1">
+            {messages.formVisitDateLabel}: {success.queueDate}
+          </p>
+          <p>
+            {messages.formQueueNumber}: {success.queueNumber}
+          </p>
+          <p className="text-xs text-muted">
+            {messages.formReferenceId}: {success.entryId}
+          </p>
         </div>
       ) : null}
     </form>
