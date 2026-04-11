@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { AdminAddPatientForm } from "@/components/admin-add-patient-form";
 import { AdminLogoutButton } from "@/components/admin-logout-button";
 import {
   ADMIN_SESSION_COOKIE,
@@ -58,34 +59,49 @@ export default async function AdminPage({ searchParams }: Props) {
         <AdminLogoutButton />
       </div>
 
-      <form
-        method="GET"
-        className="rounded-2xl border border-border bg-card p-4 shadow-sm"
-      >
-        <label
-          htmlFor="admin-date"
-          className="text-sm font-medium text-foreground"
+      <div className="grid gap-4 lg:grid-cols-2">
+        <form
+          method="GET"
+          className="rounded-2xl border border-border bg-card p-4 shadow-sm"
         >
-          Select day
-        </label>
-        <div className="mt-1 flex flex-wrap items-end gap-3">
-          <input
-            id="admin-date"
-            name="date"
-            type="date"
-            defaultValue={selectedDate}
-            min={minDate}
-            max={maxDate}
-            className="block w-full rounded-lg border border-border bg-background px-3 py-2 text-sm sm:w-72"
-          />
-          <button
-            type="submit"
-            className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-white"
+          <label
+            htmlFor="admin-date"
+            className="text-sm font-medium text-foreground"
           >
-            View
-          </button>
+            Select day
+          </label>
+          <div className="mt-1 flex flex-wrap items-end gap-3">
+            <input
+              id="admin-date"
+              name="date"
+              type="date"
+              defaultValue={selectedDate}
+              min={minDate}
+              max={maxDate}
+              className="block w-full rounded-lg border border-border bg-background px-3 py-2 text-sm sm:w-72"
+            />
+            <button
+              type="submit"
+              className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-white"
+            >
+              View
+            </button>
+          </div>
+        </form>
+
+        <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+          <h2 className="font-serif-display text-xl font-semibold">
+            Add patient
+          </h2>
+          <p className="mt-1 text-sm text-muted">
+            Admin entries are not limited by the 50/day cap. You can add 51st+
+            patients if required.
+          </p>
+          <div className="mt-3">
+            <AdminAddPatientForm defaultDate={selectedDate} />
+          </div>
         </div>
-      </form>
+      </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard

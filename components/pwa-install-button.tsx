@@ -21,6 +21,9 @@ export function PwaInstallButton({ className = "" }: { className?: string }) {
   const isSafariBrowser =
     typeof window !== "undefined" &&
     /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
+  const isIOSDevice =
+    typeof window !== "undefined" &&
+    /iPad|iPhone|iPod/.test(window.navigator.userAgent);
 
   useEffect(() => {
     const onBeforeInstallPrompt = (event: Event) => {
@@ -69,9 +72,11 @@ export function PwaInstallButton({ className = "" }: { className?: string }) {
       </button>
       {showFallbackHelp ? (
         <p className="mt-1 max-w-xs text-xs text-muted">
-          {isSafariBrowser
-            ? "Safari does not trigger this prompt. Use Share or File menu and choose Add to Dock/Home Screen."
-            : "Install prompt unavailable right now. Use browser menu and choose Install app."}
+          {isSafariBrowser && isIOSDevice
+            ? "On iPhone Safari, tap the Share icon and choose Add to Home Screen."
+            : isSafariBrowser
+              ? "Safari on Mac does not trigger this prompt. Use File menu and choose Add to Dock."
+              : "Install prompt unavailable right now. Use browser menu and choose Install app."}
         </p>
       ) : null}
     </div>

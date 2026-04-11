@@ -5,7 +5,14 @@ import {
   verifyAdminSessionToken,
 } from "@/lib/admin-auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { dateToIsoDay, getDateWindowUtc } from "@/lib/queue";
+import {
+  BOOKING_WINDOW_DAYS,
+  dateToIsoDay,
+  getDateWindowUtc,
+  isQueueDateWithinWindow,
+  isValidMobileNumber,
+  isValidPatientId,
+} from "@/lib/queue";
 
 function getRequestedDate(searchParams: URLSearchParams) {
   const candidate = searchParams.get("date");
@@ -16,10 +23,14 @@ function getRequestedDate(searchParams: URLSearchParams) {
   return dateToIsoDay(start);
 }
 
-export async function GET(request: Request) {
+async function assertAdminSession() {
   const cookieStore = await cookies();
   const token = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
-  if (!verifyAdminSessionToken(token)) {
+  return verifyAdminSessionToken(token);
+}
+
+export async function GET(request: Request) {
+  if (!(await assertAdminSession())) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
@@ -57,5 +68,95 @@ export async function GET(request: Request) {
       upcoming_total: 0,
     },
     entries: entries ?? [],
+  });
+}
+
+type AdminAddBody = {
+  patientId?: string;
+  isNewPatient?: boolean;
+  name?: string;
+  mobile?: string;
+  queueDate?: string;
+};
+
+export async function POST(request: Request) {
+  if (!(await assertAdminSession())) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  let body: AdminAddBody;
+  try {
+    body = (await request.json()) as AdminAddBody;
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 },
+    );
+  }
+
+  const patientId = body.patientId?.trim() ?? "";
+  const isNewPatient = Boolean(body.isNewPatient);
+  const name = body.name?.trim() ?? "";
+  const mobile = body.mobile?.trim() ?? "";
+  const queueDate = body.queueDate?.trim() ?? "";
+
+  if (!isNewPatient && !isValidPatientId(patientId)) {
+    return NextResponse.json(
+      {
+        error: "Patient ID must be 4-40 characters (letters, numbers, _ or -).",
+      },
+      { status: 400 },
+    );
+  }
+  if (name.length < 2) {
+    return NextResponse.json(
+      { error: "Please enter a valid patient name." },
+      { status: 400 },
+    );
+  }
+  if (!isValidMobileNumber(mobile)) {
+    return NextResponse.json(
+      { error: "Please enter a valid mobile number." },
+      { status: 400 },
+    );
+  }
+  if (!isQueueDateWithinWindow(queueDate)) {
+    return NextResponse.json(
+      {
+        error: `Queue date must be within the next ${BOOKING_WINDOW_DAYS} days.`,
+      },
+      { status: 400 },
+    );
+  }
+
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase.rpc("admin_enqueue_patient", {
+    p_patient_id: patientId || null,
+    p_name: name,
+    p_mobile: mobile,
+    p_queue_date: queueDate,
+    p_is_new_patient: isNewPatient,
+  });
+
+  if (error) {
+    return NextResponse.json(
+      { error: error.message || "Could not add patient to queue." },
+      { status: 400 },
+    );
+  }
+
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row) {
+    return NextResponse.json(
+      { error: "Unexpected response while adding patient." },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json({
+    message: "Patient added by admin.",
+    queueDate: row.queue_date as string,
+    queueNumber: row.queue_number as number,
+    entryId: row.entry_id as number,
   });
 }
