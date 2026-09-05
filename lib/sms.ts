@@ -1,3 +1,5 @@
+import { normalizeIndianPhone } from "@/lib/appointments";
+
 export async function sendSms(to: string, body: string) {
   const sid = process.env.TWILIO_ACCOUNT_SID;
   const token = process.env.TWILIO_AUTH_TOKEN;
@@ -7,8 +9,13 @@ export async function sendSms(to: string, body: string) {
     throw new Error("Twilio environment variables are not configured.");
   }
 
+  const e164 = normalizeIndianPhone(to);
+  if (!e164) {
+    throw new Error(`Invalid phone number for SMS: ${to}`);
+  }
+
   const auth = Buffer.from(`${sid}:${token}`).toString("base64");
-  const params = new URLSearchParams({ To: to, From: from, Body: body });
+  const params = new URLSearchParams({ To: e164, From: from, Body: body });
 
   const response = await fetch(
     `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`,
