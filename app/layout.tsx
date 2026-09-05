@@ -10,8 +10,11 @@ const sans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Appointments",
-  description: "Login-based appointment system",
+  title: {
+    default: "Appointments",
+    template: "%s | Appointments",
+  },
+  description: "Book hospital appointments with OTP login",
   manifest: "/manifest.webmanifest",
   icons: {
     icon: "/favicon.png",

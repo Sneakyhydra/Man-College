@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePatientLocale } from "@/components/patient-locale-provider";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -8,6 +9,7 @@ type BeforeInstallPromptEvent = Event & {
 };
 
 export function PwaInstallButton({ className = "" }: { className?: string }) {
+  const { t } = usePatientLocale();
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -68,7 +70,7 @@ export function PwaInstallButton({ className = "" }: { className?: string }) {
         disabled={isInstalled || runtimeInstalled}
         className="inline-flex items-center justify-center rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {isInstalled || runtimeInstalled ? "App installed" : "Download app"}
+        {t.installApp}
       </button>
       {showFallbackHelp ? (
         <p className="mt-1 max-w-xs text-xs text-muted">

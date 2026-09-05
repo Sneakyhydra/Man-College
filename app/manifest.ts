@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Appointments",
     short_name: "Appointments",
-    description: "Login-based appointment system",
+    description: "Book hospital appointments with OTP login",
     start_url: "/",
     display: "standalone",
     background_color: "#faf9f7",
