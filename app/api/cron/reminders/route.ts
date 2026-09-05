@@ -30,7 +30,12 @@ export async function GET(request: Request) {
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
   const tomorrow = toIsoDateInTimeZone(tomorrowDate);
 
-  const results: { sent: number; errors: string[] } = { sent: 0, errors: [] };
+  const results: {
+    sent: number;
+    dayBeforeSent: number;
+    sameDaySent: number;
+    errors: string[];
+  } = { sent: 0, dayBeforeSent: 0, sameDaySent: 0, errors: [] };
 
   async function processBatch(
     date: string,
@@ -86,6 +91,8 @@ export async function GET(request: Request) {
           continue;
         }
         results.sent += 1;
+        if (kind === "day_before") results.dayBeforeSent += 1;
+        else results.sameDaySent += 1;
       } catch (err) {
         results.errors.push(
           err instanceof Error ? err.message : "SMS send failed",
@@ -94,17 +101,16 @@ export async function GET(request: Request) {
     }
   }
 
-  if (hour === settings.reminder_day_before_hour) {
-    await processBatch(tomorrow, "day_before", "reminder_day_before_sent_at");
-  }
-  if (hour === settings.reminder_same_day_hour) {
-    await processBatch(today, "same_day", "reminder_same_day_sent_at");
-  }
+  // Hobby plan: one cron per day — send both reminder types in this run.
+  // (hour fields in admin are informational until you upgrade for multi-run crons)
+  await processBatch(tomorrow, "day_before", "reminder_day_before_sent_at");
+  await processBatch(today, "same_day", "reminder_same_day_sent_at");
 
   return NextResponse.json({
     hour,
     today,
     tomorrow,
+    scheduleNote: "Runs once daily (Vercel Hobby). Sends day-before + same-day.",
     ...results,
   });
 }
