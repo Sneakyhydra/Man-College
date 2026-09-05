@@ -1,7 +1,6 @@
-const CACHE_NAME = "man-college-v2";
+const CACHE_NAME = "appointments-v1";
 const APP_SHELL = [
   "/",
-  "/queue",
   "/manifest.webmanifest",
   "/favicon.png",
   "/pwa-192.png",

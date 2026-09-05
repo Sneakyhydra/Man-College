@@ -25,26 +25,10 @@
   --color-border: var(--border);
   --color-ring: var(--ring);
   --font-sans: var(--font-sans-body);
-  --font-serif: var(--font-serif-display);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
-}
-
-.font-serif-display {
-  font-family: var(--font-serif), ui-serif, Georgia, serif;
-}
-
-/* Smooth horizontal gallery scroll */
-.snap-x-mandatory {
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-
-.snap-start-child > * {
-  scroll-snap-align: start;
 }
