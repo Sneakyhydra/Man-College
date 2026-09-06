@@ -32,7 +32,7 @@ export function AdminLoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mx-auto mt-16 max-w-sm space-y-4 px-4">
+    <form onSubmit={onSubmit} className="mx-auto my-auto w-full max-w-sm space-y-4 py-8">
       <h1 className="text-2xl font-semibold">Admin login</h1>
       <div>
         <label className="text-sm font-medium" htmlFor="username">

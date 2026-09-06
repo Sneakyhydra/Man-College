@@ -31,7 +31,7 @@ export default async function AdminRosterPage({ searchParams }: Props) {
   const list = Array.isArray(entries) ? entries : [];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
+    <div className="mx-auto my-auto w-full max-w-5xl py-8">
       <AdminNav />
       <h1 className="text-2xl font-semibold">Day roster</h1>
       <form method="GET" className="mt-4 flex flex-wrap items-end gap-3">

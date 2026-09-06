@@ -23,7 +23,7 @@ export function PatientShell({ children }: { children: React.ReactNode }) {
     pathname === "/login" || pathname === "/onboarding";
 
   return (
-    <div className="mx-auto flex min-h-full w-full max-w-lg flex-col px-4 pb-24 pt-4">
+    <div className="mx-auto my-auto w-full max-w-lg py-8 pb-24">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-semibold text-accent">{t.appName}</p>
         <div className="flex flex-wrap items-center gap-2">
@@ -40,7 +40,7 @@ export function PatientShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <div className="flex-1">{children}</div>
+      <div>{children}</div>
 
       {!hideNav ? (
         <nav className="fixed inset-x-0 bottom-0 border-t border-border bg-card/95 backdrop-blur">

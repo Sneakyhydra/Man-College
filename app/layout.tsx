@@ -34,9 +34,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${sans.variable} h-full`}>
-      <body className="min-h-full antialiased">
+      <body className="min-h-dvh antialiased">
         <PwaRegister />
-        {children}
+        <div className="flex min-h-dvh w-full flex-col justify-center px-4">
+          {children}
+        </div>
       </body>
     </html>
   );

@@ -11,30 +11,36 @@ export function LanguageToggle({ className = "" }: { className?: string }) {
   }
 
   return (
-    <div className={`inline-flex items-center gap-1 text-sm ${className}`}>
-      <span className="text-muted">{t.language}</span>
-      <button
-        type="button"
-        onClick={() => select("en")}
-        className={`rounded-full px-2.5 py-1 ${
-          locale === "en"
-            ? "bg-accent text-white"
-            : "text-foreground hover:bg-stone-100"
-        }`}
+    <div className={`inline-flex items-center gap-2.5 text-sm ${className}`}>
+      <span className="shrink-0 text-muted">{t.language}</span>
+      <div
+        role="group"
+        aria-label={t.language}
+        className="inline-flex items-center rounded-full bg-stone-100 p-0.5"
       >
-        {t.english}
-      </button>
-      <button
-        type="button"
-        onClick={() => select("hi")}
-        className={`rounded-full px-2.5 py-1 ${
-          locale === "hi"
-            ? "bg-accent text-white"
-            : "text-foreground hover:bg-stone-100"
-        }`}
-      >
-        {t.hindi}
-      </button>
+        <button
+          type="button"
+          onClick={() => select("en")}
+          className={`rounded-full px-3 py-1 transition ${
+            locale === "en"
+              ? "bg-accent text-white"
+              : "text-muted hover:text-foreground"
+          }`}
+        >
+          {t.english}
+        </button>
+        <button
+          type="button"
+          onClick={() => select("hi")}
+          className={`rounded-full px-3 py-1 transition ${
+            locale === "hi"
+              ? "bg-accent text-white"
+              : "text-muted hover:text-foreground"
+          }`}
+        >
+          {t.hindi}
+        </button>
+      </div>
     </div>
   );
 }
