@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 export const ADMIN_SESSION_COOKIE = "admin_session";
-const SESSION_TTL_MS = 1000 * 60 * 60 * 24;
+const SESSION_TTL_MS = 1000 * 60 * 60 * 8;
 
 function requiredEnv(name: string) {
   const value = process.env[name];
@@ -49,3 +49,17 @@ export function verifyAdminSessionToken(token: string | undefined) {
   if (!Number.isFinite(expiresAt)) return false;
   return Date.now() < expiresAt;
 }
+
+export function timingSafeStringEqual(a: string, b: string) {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  const len = Math.max(aBuf.length, bBuf.length);
+  const aPad = Buffer.alloc(len);
+  const bPad = Buffer.alloc(len);
+  aBuf.copy(aPad);
+  bBuf.copy(bPad);
+  const equal = timingSafeEqual(aPad, bPad);
+  return equal && aBuf.length === bBuf.length;
+}
+
+export const ADMIN_SESSION_MAX_AGE_SEC = SESSION_TTL_MS / 1000;

@@ -48,3 +48,27 @@ export function reminderMessage(opts: {
   }
   return `आज ${opts.date} को ${opts.slotLabel} आपका अपॉइंटमेंट है। टोकन: ${opts.token}. समय पर पहुँचें। Today ${opts.date} ${opts.slotLabel}, token ${opts.token}.`;
 }
+
+export function bookingConfirmationMessage(opts: {
+  date: string;
+  slotLabel: string;
+  token: number;
+}) {
+  return `अपॉइंटमेंट बुक: ${opts.date}, ${opts.slotLabel}, टोकन ${opts.token}. शुल्क नकद। Booked: ${opts.date} ${opts.slotLabel}, token ${opts.token}.`;
+}
+
+export function cancelConfirmationMessage(opts: {
+  date: string;
+  slotLabel: string;
+  token: number;
+}) {
+  return `अपॉइंटमेंट रद्द: ${opts.date}, ${opts.slotLabel}, टोकन ${opts.token}. Cancelled: ${opts.date} ${opts.slotLabel}, token ${opts.token}.`;
+}
+
+export function rescheduleConfirmationMessage(opts: {
+  date: string;
+  slotLabel: string;
+  token: number;
+}) {
+  return `अपॉइंटमेंट रीशेड्यूल: ${opts.date}, ${opts.slotLabel}, नया टोकन ${opts.token}. Rescheduled: ${opts.date} ${opts.slotLabel}, token ${opts.token}.`;
+}

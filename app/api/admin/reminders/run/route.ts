@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
+import { requireAdminSession } from "@/lib/admin-session";
 import { runReminderJob } from "@/lib/reminder-job";
 
-export async function GET(request: Request) {
-  const auth = request.headers.get("authorization");
-  const secret = process.env.CRON_SECRET;
-  if (!secret || auth !== `Bearer ${secret}`) {
+export async function POST() {
+  if (!(await requireAdminSession())) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 

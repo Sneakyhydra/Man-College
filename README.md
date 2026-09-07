@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Appointments (clinic)
 
-## Getting Started
+Phone OTP booking for patients, env-based admin desk tools, Twilio SMS reminders.
 
-First, run the development server:
+## Stack
+
+- Next.js App Router + PWA
+- Supabase Auth (phone OTP), Postgres RPCs, RLS
+- Twilio for booking/reminder SMS (separate from Supabase Auth SMS provider)
+- Vercel cron (Hobby: once daily)
+
+## Token rules (go-live)
+
+- Tokens are **per slot**: each slot is `1, 2, 3…` (not shared across the day).
+- Always show **token + slot time**.
+- Cancel **keeps** the token on the cancelled row; other patients are **not** renumbered.
+- Cancelled seats free **capacity**, but the cancelled number is **never reused** (FCFS).
+- Admin can overbook past capacity; tokens continue in that slot (`16, 17…`).
+
+## Environment
+
+Copy `.env.example` to `.env.local`:
+
+| Variable | Purpose |
+|----------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Browser/server patient client |
+| `SUPABASE_SERVICE_ROLE_KEY` | Admin APIs + cron (never expose to browser) |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` / `ADMIN_SESSION_SECRET` | Shared desk login (8h session, rate-limited) |
+| `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM_NUMBER` | App SMS (confirmations + reminders) |
+| `CRON_SECRET` | Bearer token for `/api/cron/reminders` |
+
+Configure **Supabase Auth → Phone** with its own SMS provider (often Twilio again). That path is separate from `TWILIO_*` above.
+
+## Migrations
+
+Apply in order under `supabase/migrations/`, including:
+
+- `20260907200000_clinic_golive.sql` — per-slot tokens, closed dates, statuses, admin cancel/status, reminder_runs
+
+Deploy app only after migrations succeed.
+
+## Admin
+
+- `/admin` — day roster (check-in / complete / no-show / cancel)
+- `/admin/patients` — create patient, link hospital ID, book on behalf
+- `/admin/slots` — capacities, closed dates, reminder toggle, manual reminder run
+
+Slots with active future bookings cannot be edited/deleted.
+
+## Cron
+
+`vercel.json` schedules `GET /api/cron/reminders` daily (`30 2 * * *` UTC ≈ 08:00 IST). Send header:
+
+`Authorization: Bearer $CRON_SECRET`
+
+Hobby runs once/day and sends both day-before and same-day reminders. Logs land in `reminder_runs`; desk can also **Run reminders now** from Slots & settings.
+
+## Local smoke
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# patient: /login → OTP → onboarding → /book
+# admin: /admin/login
+source .env.local && curl -s -H "Authorization: Bearer $CRON_SECRET" \
+  http://localhost:3000/api/cron/reminders
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

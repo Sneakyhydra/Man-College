@@ -148,10 +148,19 @@ export function AppointmentManager({
 
     try {
       const supabase = createClient();
+      const cancelledId = current.appointment_id;
       const { error: rpcError } = await supabase.rpc("cancel_appointment", {
-        p_appointment_id: current.appointment_id,
+        p_appointment_id: cancelledId,
       });
       if (rpcError) throw rpcError;
+      void fetch("/api/patient/sms-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          appointmentId: cancelledId,
+          kind: "cancelled",
+        }),
+      });
 
       const [next, nextDays] = await Promise.all([
         fetchUpcomingAppointment(),
@@ -185,11 +194,14 @@ export function AppointmentManager({
 
     try {
       const supabase = createClient();
-      const { error: rpcError } = await supabase.rpc("reschedule_appointment", {
-        p_appointment_id: current.appointment_id,
-        p_new_date: effectiveDate,
-        p_new_slot_id: slotId,
-      });
+      const { data, error: rpcError } = await supabase.rpc(
+        "reschedule_appointment",
+        {
+          p_appointment_id: current.appointment_id,
+          p_new_date: effectiveDate,
+          p_new_slot_id: slotId,
+        },
+      );
       if (rpcError) throw rpcError;
 
       const [next, nextDays] = await Promise.all([
@@ -199,6 +211,19 @@ export function AppointmentManager({
       if (!next) {
         throw new Error(t.loginError);
       }
+
+      const appointmentId =
+        data && typeof data === "object" && "id" in data
+          ? Number((data as { id: number }).id)
+          : next.appointment_id;
+      void fetch("/api/patient/sms-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          appointmentId,
+          kind: "rescheduled",
+        }),
+      });
 
       trustClientRef.current = true;
       flushSync(() => {

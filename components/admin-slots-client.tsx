@@ -19,9 +19,26 @@ type Settings = {
   reminders_enabled: boolean;
 };
 
+type ClosedDate = { date: string; note: string | null };
+
+type ReminderRun = {
+  id: number;
+  started_at: string;
+  finished_at: string | null;
+  day_before_sent: number;
+  same_day_sent: number;
+  error_count: number;
+};
+
 export function AdminSlotsClient() {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [settings, setSettings] = useState<Settings | null>(null);
+  const [closedDates, setClosedDates] = useState<ClosedDate[]>([]);
+  const [lastReminderRun, setLastReminderRun] = useState<ReminderRun | null>(
+    null,
+  );
+  const [newClosedDate, setNewClosedDate] = useState("");
+  const [newClosedNote, setNewClosedNote] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -32,6 +49,8 @@ export function AdminSlotsClient() {
     if (!res.ok) throw new Error(data.error || "Failed to load");
     setSlots(data.slots ?? []);
     setSettings(data.settings);
+    setClosedDates(data.closedDates ?? []);
+    setLastReminderRun(data.lastReminderRun ?? null);
   }
 
   useEffect(() => {
@@ -55,6 +74,72 @@ export function AdminSlotsClient() {
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function addClosedDate(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newClosedDate) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/slots", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          closedDates: {
+            add: { date: newClosedDate, note: newClosedNote || null },
+          },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to add closed date");
+      setNewClosedDate("");
+      setNewClosedNote("");
+      setMessage("Closed date added.");
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function removeClosedDate(date: string) {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/slots", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ closedDates: { remove: [date] } }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to remove");
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function runRemindersNow() {
+    setBusy(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/admin/reminders/run", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Reminder run failed");
+      setMessage(
+        `Reminders: sent ${data.sent ?? 0} (day-before ${data.dayBeforeSent ?? 0}, same-day ${data.sameDaySent ?? 0}).`,
+      );
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Reminder run failed");
     } finally {
       setBusy(false);
     }
@@ -108,6 +193,10 @@ export function AdminSlotsClient() {
     <div className="mx-auto my-auto w-full max-w-5xl py-8">
       <AdminNav />
       <h1 className="text-2xl font-semibold">Slots & settings</h1>
+      <p className="mt-1 text-sm text-muted">
+        Slots with future bookings are locked. Tokens are per-slot (1, 2, 3…) and
+        never renumbered on cancel.
+      </p>
 
       {settings ? (
         <section className="mt-6 space-y-3 rounded-2xl border border-border bg-card p-4">
@@ -128,6 +217,10 @@ export function AdminSlotsClient() {
               className="mt-1 w-full rounded-xl border border-border px-3 py-2"
             />
           </label>
+          <p className="text-xs text-muted">
+            Reminder hour fields are informational on Vercel Hobby (cron runs
+            once daily ~08:00 IST and sends both reminder types).
+          </p>
           <label className="block text-sm">
             Day-before reminder hour (IST 0–23)
             <input
@@ -173,8 +266,79 @@ export function AdminSlotsClient() {
             />
             Reminders enabled
           </label>
+          <div className="rounded-xl border border-border bg-stone-50 px-3 py-2 text-xs text-muted">
+            {lastReminderRun ? (
+              <p>
+                Last reminder run:{" "}
+                {new Date(lastReminderRun.started_at).toLocaleString()} — sent{" "}
+                {lastReminderRun.day_before_sent + lastReminderRun.same_day_sent}{" "}
+                (errors: {lastReminderRun.error_count})
+              </p>
+            ) : (
+              <p>No reminder runs recorded yet.</p>
+            )}
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void runRemindersNow()}
+              className="mt-2 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground disabled:opacity-60"
+            >
+              Run reminders now
+            </button>
+          </div>
         </section>
       ) : null}
+
+      <section className="mt-6 space-y-3 rounded-2xl border border-border bg-card p-4">
+        <h2 className="font-semibold">Closed dates</h2>
+        <form onSubmit={addClosedDate} className="flex flex-wrap gap-2">
+          <input
+            type="date"
+            required
+            value={newClosedDate}
+            onChange={(e) => setNewClosedDate(e.target.value)}
+            className="rounded-xl border border-border px-3 py-2 text-sm"
+          />
+          <input
+            value={newClosedNote}
+            onChange={(e) => setNewClosedNote(e.target.value)}
+            placeholder="Note (optional)"
+            className="min-w-[12rem] flex-1 rounded-xl border border-border px-3 py-2 text-sm"
+          />
+          <button
+            type="submit"
+            disabled={busy}
+            className="rounded-full border border-border px-3 py-2 text-sm font-medium"
+          >
+            Add
+          </button>
+        </form>
+        <ul className="space-y-2 text-sm">
+          {closedDates.length === 0 ? (
+            <li className="text-muted">No upcoming closed dates.</li>
+          ) : (
+            closedDates.map((c) => (
+              <li
+                key={c.date}
+                className="flex flex-wrap items-center justify-between gap-2"
+              >
+                <span>
+                  {c.date}
+                  {c.note ? ` — ${c.note}` : ""}
+                </span>
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => void removeClosedDate(c.date)}
+                  className="text-red-600"
+                >
+                  Remove
+                </button>
+              </li>
+            ))
+          )}
+        </ul>
+      </section>
 
       <section className="mt-6 space-y-3">
         <div className="flex items-center justify-between">

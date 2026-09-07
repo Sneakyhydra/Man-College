@@ -51,11 +51,22 @@ export function BookingPanel({
     setMessage(null);
     try {
       const supabase = createClient();
-      const { error: rpcError } = await supabase.rpc("book_appointment", {
+      const { data, error: rpcError } = await supabase.rpc("book_appointment", {
         p_date: effectiveDate,
         p_slot_id: slotId,
       });
       if (rpcError) throw rpcError;
+      const appointmentId =
+        data && typeof data === "object" && "id" in data
+          ? Number((data as { id: number }).id)
+          : null;
+      if (appointmentId) {
+        void fetch("/api/patient/sms-confirmation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ appointmentId, kind: "booked" }),
+        });
+      }
       setMessage(t.successBooked);
       router.push("/appointments");
     } catch (err) {

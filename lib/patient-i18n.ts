@@ -55,7 +55,8 @@ const en = {
   cancel: "Cancel appointment",
   cancelling: "Cancelling…",
   reschedule: "Reschedule",
-  confirmCancel: "Cancel this appointment? Others in your slot will move up.",
+  confirmCancel:
+    "Cancel this appointment? Your token stays cancelled; other patients keep their token numbers.",
   noAppointment: "You have no upcoming appointment.",
   bookNow: "Book a slot",
   pickNewSlot: "Choose a new date and slot",
@@ -128,7 +129,7 @@ const hi: typeof en = {
   cancelling: "रद्द हो रहा है…",
   reschedule: "रीशेड्यूल करें",
   confirmCancel:
-    "अपॉइंटमेंट रद्द करें? आपके स्लॉट के बाकी लोगों के टोकन आगे बढ़ जाएंगे।",
+    "अपॉइंटमेंट रद्द करें? आपका टोकन रद्द रहेगा; बाकी मरीज़ों के टोकन नहीं बदलेंगे।",
   noAppointment: "कोई आगामी अपॉइंटमेंट नहीं है।",
   bookNow: "स्लॉट बुक करें",
   pickNewSlot: "नई तारीख और स्लॉट चुनें",
