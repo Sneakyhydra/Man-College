@@ -16,6 +16,7 @@ Phone OTP booking for patients, env-based admin desk tools, Twilio SMS reminders
 - Cancel **keeps** the token on the cancelled row; other patients are **not** renumbered.
 - Cancelled seats free **capacity**, but the cancelled number is **never reused** (FCFS).
 - Admin can overbook past capacity; tokens continue in that slot (`16, 17…`).
+- **Sundays are always closed** (plus any dates in Closed dates).
 
 ## Environment
 

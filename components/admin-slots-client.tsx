@@ -291,6 +291,9 @@ export function AdminSlotsClient() {
 
       <section className="mt-6 space-y-3 rounded-2xl border border-border bg-card p-4">
         <h2 className="font-semibold">Closed dates</h2>
+        <p className="text-xs text-muted">
+          Sundays are always closed. Add other holidays below.
+        </p>
         <form onSubmit={addClosedDate} className="flex flex-wrap gap-2">
           <input
             type="date"
